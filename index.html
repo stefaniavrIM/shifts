@@ -2,14 +2,15 @@
 <html>
   <head>
     <title>IM Lab Assistant Shifts</title>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <style>
       * {
         padding: 0;
         margin: 0;
         border: 0;
       }
-      html, body {
+      html,
+      body {
         width: 100%;
         height: 100%;
       }
@@ -22,7 +23,7 @@
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, -50%);
         display: flex;
         justify-content: center;
       }
@@ -31,7 +32,9 @@
         border-radius: 5vh;
         margin: 0 2vh;
       }
-      h1, h2, h3 {
+      h1,
+      h2,
+      h3 {
         width: 100vw;
         font-size: 6vh;
         height: 12vh;
@@ -52,13 +55,17 @@
   <body>
     <h1 id="info"></h1>
     <div class="person" id="person">
-      <img id="photo"/>
+      <img id="photo" />
       <!--
       <h3 id="next"></h3>
       -->
     </div>
     <h2 id="name"></h2>
-    <img id="sticker" src="data/aaron-shirt-gif.gif">
+    <img id="sticker" src="data/aaron-shirt-gif.gif" />
+    <img
+      id="wow-sticker"
+      style="visibility: hidden; width: 20vw; z-index: 99;"
+      src="./data/moiz-sticker.png" />
   </body>
   <script>
     // fun sticker at random location
@@ -71,41 +78,43 @@
     var speedX;
     var speedY;
 
+    var wowStickerElement = document.getElementById("wow-sticker");
+
     function setupSticker() {
       stickerWidth = 20;
       stickerElement = document.getElementById("sticker");
-      maxX = 100-stickerWidth;
-      maxY = 100*window.innerHeight/window.innerWidth-stickerWidth;
-      leftPos = Math.random()*maxX;
-      topPos = Math.random()*maxY;
-      speedX = Math.random()*0.5;
-      speedY = Math.random()*0.5;
+      maxX = 100 - stickerWidth;
+      maxY = (100 * window.innerHeight) / window.innerWidth - stickerWidth;
+      leftPos = Math.random() * maxX;
+      topPos = Math.random() * maxY;
+      speedX = Math.random() * 0.5;
+      speedY = Math.random() * 0.5;
       stickerElement.style.position = "fixed";
       stickerElement.style.zIndex = "100";
       stickerElement.style.width = 20 + "vw";
-      stickerElement.style.left = leftPos+"vw";
-      stickerElement.style.top = topPos+"vw";
+      stickerElement.style.left = leftPos + "vw";
+      stickerElement.style.top = topPos + "vw";
     }
 
-    document.body.onload = function() {
+    document.body.onload = function () {
       setupSticker();
 
       requestAnimationFrame(animateSticker);
-    }
+    };
 
     document.body.onresize = setupSticker;
 
     function animateSticker(timestamp) {
       leftPos += speedX;
       topPos += speedY;
-      if (leftPos < -stickerWidth/4 || leftPos > maxX + stickerWidth/4) {
+      if (leftPos < -stickerWidth / 4 || leftPos > maxX + stickerWidth / 4) {
         speedX = -speedX;
       }
       if (topPos < 0 || topPos > maxY) {
         speedY = -speedY;
       }
-      stickerElement.style.left = leftPos+"vw";
-      stickerElement.style.top = topPos+"vw";
+      stickerElement.style.left = leftPos + "vw";
+      stickerElement.style.top = topPos + "vw";
       requestAnimationFrame(animateSticker);
     }
 
@@ -113,8 +122,8 @@
     function updateInfo() {
       var today = new Date();
       var todayString = today.toISOString();
-      console.log("Today: "+todayString);
-      console.log("Today Timestamp: "+today.getTime());
+      console.log("Today: " + todayString);
+      console.log("Today Timestamp: " + today.getTime());
       var todayDateTime = todayString.split("T"); //split date from time
       var todayDate = todayDateTime[0].split("-"); //split yyyy mm dd
       var todayHours = today.getHours();
@@ -124,14 +133,18 @@
       var timeToRefresh = 300000;
       if (!willReload) {
         willReload = true;
-        setTimeout(function(){location.reload()}, (23-todayHours+4)*3600000+(59-todayMinutes)*60000+(59-today.getSeconds())*1000); // reload every midnight
+        setTimeout(function () {
+          location.reload();
+        }, (23 - todayHours + 4) * 3600000 +
+          (59 - todayMinutes) * 60000 +
+          (59 - today.getSeconds()) * 1000); // reload every midnight
       }
 
       console.log(response.items[0]);
       for (var i = 0; i < response.items.length; i++) {
         console.log(i);
         var item = response.items[i];
-        var allDay = item.start.date? true : false;
+        var allDay = item.start.date ? true : false;
         var startDT = allDay ? item.start.date : item.start.dateTime;
         var dateTime = startDT.split("T"); //split date from time
         var date = dateTime[0].split("-"); //split yyyy mm dd
@@ -140,45 +153,83 @@
         var startDay = date[2];
         var startHour = dateTime[1].split(":")[0];
         var startMinute = dateTime[1].split(":")[1];
-        var startDateISO = new Date(startMonth + " " + startDay + ", " + startYear + " "+startHour+":"+startMinute+":00"); // not used
+        var startDateISO = new Date(
+          startMonth +
+            " " +
+            startDay +
+            ", " +
+            startYear +
+            " " +
+            startHour +
+            ":" +
+            startMinute +
+            ":00"
+        ); // not used
         var startHour = dateTime[1].split(":")[0];
         var endDT = allDay ? item.end.date : item.end.dateTime;
         var endHour = endDT.split("T")[1].split(":")[0];
         var endMinute = endDT.split("T")[1].split(":")[1];
-        var endDateISO = new Date(startMonth + " " + startDay + ", " + startYear + " "+endHour+":"+endMinute+":00"); // not used
+        var endDateISO = new Date(
+          startMonth +
+            " " +
+            startDay +
+            ", " +
+            startYear +
+            " " +
+            endHour +
+            ":" +
+            endMinute +
+            ":00"
+        ); // not used
         var upcomingDate = "on " + startMonth + " " + startDay;
-        var upcomingTime = (parseInt(startHour-1)%12+1) + ":" + startMinute + " " + AmPm(startHour);
+        var upcomingTime =
+          (parseInt(startHour - 1) % 12) +
+          1 +
+          ":" +
+          startMinute +
+          " " +
+          AmPm(startHour);
         if (startHour == "12" && startMinute == "00") {
-          upcomingTime = "noon"
+          upcomingTime = "noon";
         }
         console.log(item.summary);
-        console.log("start: "+startDT)
-        console.log("start: "+startDateISO.getTime());
-        console.log("end: "+endDT)
-        console.log("end: "+endDateISO.getTime());
+        console.log("start: " + startDT);
+        console.log("start: " + startDateISO.getTime());
+        console.log("end: " + endDT);
+        console.log("end: " + endDateISO.getTime());
 
-        let imgElem = document.createElement('img');
+        let imgElem = document.createElement("img");
         imgElem.className = "photo";
-        
-        if( !allDay ){
+
+        if (!allDay) {
           var isCurrent = true;
-          if (todayDate[0] != date[0]) {  // check year
+          if (todayDate[0] != date[0]) {
+            // check year
             isCurrent = false;
-          } else if (todayDate[1] != date[1]) { // check month
+          } else if (todayDate[1] != date[1]) {
+            // check month
             isCurrent = false;
           } else {
-            if (todayDate[2] != date[2]) {  // check day
+            if (todayDate[2] != date[2]) {
+              // check day
               isCurrent = false;
-              if (parseInt(todayDate[2])+1 == parseInt(date[2])) {  // check tomorrow
+              if (parseInt(todayDate[2]) + 1 == parseInt(date[2])) {
+                // check tomorrow
                 upcomingDate = "tomorrow";
               }
             } else {
               upcomingDate = "today";
-              if (todayHours < startHour || todayHours > endHour) { // check hour
+              if (todayHours < startHour || todayHours > endHour) {
+                // check hour
                 isCurrent = false;
-              } else if (todayHours == startHour && todayMinutes < startMinute) { //  before startTime
+              } else if (
+                todayHours == startHour &&
+                todayMinutes < startMinute
+              ) {
+                //  before startTime
                 isCurrent = false;
-              } else if (todayHours == endHour && todayMinutes >= endMinute) {  // after endTime
+              } else if (todayHours == endHour && todayMinutes >= endMinute) {
+                // after endTime
                 isCurrent = false;
               }
             }
@@ -186,7 +237,7 @@
           if (isCurrent) {
             console.log("isCurrent: True");
             name = item.summary;
-            imgElem.src = "data/photos/"+name+".jpg";
+            imgElem.src = "data/photos/" + name + ".jpg";
             if (i === 0) {
               info = "The Lab Assistant on duty";
               document.getElementById("person").innerHTML = "";
@@ -196,9 +247,16 @@
               document.getElementById("name").innerHTML += " & " + name;
             }
             document.getElementById("person").appendChild(imgElem);
-            timeToRefresh = endDateISO.getTime()-today.getTime() + 5000;
+            timeToRefresh = endDateISO.getTime() - today.getTime() + 5000;
             if (timeToRefresh > 300000) {
               timeToRefresh = 300000;
+            }
+
+            // wow sticker
+            if (name == "Moiz") {
+              wowStickerElement.style.visibility = "visible";
+              wowStickerElement.style.left = imgElem.style.left;
+              wowStickerElement.style.top = imgElem.style.top;
             }
           } else {
             console.log("isCurrent: False");
@@ -207,9 +265,14 @@
               imgElem.src = "data/photos/Nobody.jpg";
               document.getElementById("person").innerHTML = "";
               document.getElementById("person").appendChild(imgElem);
-              name = item.summary+" will be on duty from " + upcomingTime + " " + upcomingDate;
+              name =
+                item.summary +
+                " will be on duty from " +
+                upcomingTime +
+                " " +
+                upcomingDate;
               document.getElementById("name").innerHTML = name;
-              timeToRefresh = startDateISO.getTime()-today.getTime() + 5000;
+              timeToRefresh = startDateISO.getTime() - today.getTime() + 5000;
               if (timeToRefresh > 300000) {
                 timeToRefresh = 300000;
               }
@@ -222,16 +285,18 @@
       document.getElementById("info").innerHTML = info;
     }
 
-    var clientId = '994924439111-ghkfui3q88qfec9jeoj69o7ogcnl7824.apps.googleusercontent.com'; //choose web app client Id, redirect URI and Javascript origin set to http://localhost
-    var apiKey = 'AIzaSyCKj9NOc2xCbE1cI6XrwqnDQNfg7sCXwIQ'; //choose public apiKey, any IP allowed (leave blank the allowed IP boxes in Google Dev Console)
-    var userEmail = "nyu.edu_4h0j8ra7ljn6ir91ptj5hcjb3c@group.calendar.google.com"; //your calendar Id
+    var clientId =
+      "994924439111-ghkfui3q88qfec9jeoj69o7ogcnl7824.apps.googleusercontent.com"; //choose web app client Id, redirect URI and Javascript origin set to http://localhost
+    var apiKey = "AIzaSyCKj9NOc2xCbE1cI6XrwqnDQNfg7sCXwIQ"; //choose public apiKey, any IP allowed (leave blank the allowed IP boxes in Google Dev Console)
+    var userEmail =
+      "nyu.edu_4h0j8ra7ljn6ir91ptj5hcjb3c@group.calendar.google.com"; //your calendar Id
     var userTimeZone = "Abu_Dhabi"; //example "Rome" "Los_Angeles" ecc...
     var maxRows = 10; // number of events to check
-      
-    var scopes = 'https://www.googleapis.com/auth/calendar';
+
+    var scopes = "https://www.googleapis.com/auth/calendar";
 
     var response;
-      
+
     //--------------------- Add a 0 to numbers
     function padNum(num) {
       if (num <= 9) {
@@ -239,41 +304,64 @@
       }
       return num;
     }
-    //--------------------- end  
-      
+    //--------------------- end
+
     //--------------------- From 24h to Am/Pm
     function AmPm(num) {
-      if (num < 12) { return "am"; }
+      if (num < 12) {
+        return "am";
+      }
       return "pm";
     }
-    //--------------------- end  
+    //--------------------- end
 
     //--------------------- num Month to String
     function monthString(num) {
-         if (num === "01") { return "Jan"; } 
-      else if (num === "02") { return "Feb"; } 
-      else if (num === "03") { return "Mar"; } 
-      else if (num === "04") { return "Apr"; } 
-      else if (num === "05") { return "Mar"; } 
-      else if (num === "06") { return "Jun"; } 
-      else if (num === "07") { return "Jul"; } 
-      else if (num === "08") { return "Aug"; } 
-      else if (num === "09") { return "Sep"; } 
-      else if (num === "10") { return "Oct"; } 
-      else if (num === "11") { return "Nov"; } 
-      else if (num === "12") { return "Dec"; }
+      if (num === "01") {
+        return "Jan";
+      } else if (num === "02") {
+        return "Feb";
+      } else if (num === "03") {
+        return "Mar";
+      } else if (num === "04") {
+        return "Apr";
+      } else if (num === "05") {
+        return "Mar";
+      } else if (num === "06") {
+        return "Jun";
+      } else if (num === "07") {
+        return "Jul";
+      } else if (num === "08") {
+        return "Aug";
+      } else if (num === "09") {
+        return "Sep";
+      } else if (num === "10") {
+        return "Oct";
+      } else if (num === "11") {
+        return "Nov";
+      } else if (num === "12") {
+        return "Dec";
+      }
     }
     //--------------------- end
 
     //--------------------- from num to day of week
-    function dayString(num){
-         if (num == "1") { return "Mon" }
-      else if (num == "2") { return "Tue" }
-      else if (num == "3") { return "Wed" }
-      else if (num == "4") { return "Thu" }
-      else if (num == "5") { return "Fri" }
-      else if (num == "6") { return "Sat" }
-      else if (num == "0") { return "Sun" }
+    function dayString(num) {
+      if (num == "1") {
+        return "Mon";
+      } else if (num == "2") {
+        return "Tue";
+      } else if (num == "3") {
+        return "Wed";
+      } else if (num == "4") {
+        return "Thu";
+      } else if (num == "5") {
+        return "Fri";
+      } else if (num == "6") {
+        return "Sat";
+      } else if (num == "0") {
+        return "Sun";
+      }
     }
     //--------------------- end
 
@@ -286,7 +374,10 @@
 
     //--------------------- check Auth
     function checkAuth() {
-      gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true}, handleAuthResult);
+      gapi.auth.authorize(
+        { client_id: clientId, scope: scopes, immediate: true },
+        handleAuthResult
+      );
     }
     //--------------------- end
 
@@ -301,21 +392,22 @@
     //--------------------- API CALL itself
     function makeApiCall() {
       var today = new Date(); //today date
-      gapi.client.load('calendar', 'v3', function () {
+      gapi.client.load("calendar", "v3", function () {
         var request = gapi.client.calendar.events.list({
-          'calendarId' : userEmail,
-          'timeZone' : userTimeZone, 
-          'singleEvents': true, 
-          'timeMin': today.toISOString(), //gathers only events not happened yet
-          'maxResults': maxRows, 
-          'orderBy': 'startTime'});
-      request.execute(function (resp) {
-        response = resp;
-        updateInfo();
+          calendarId: userEmail,
+          timeZone: userTimeZone,
+          singleEvents: true,
+          timeMin: today.toISOString(), //gathers only events not happened yet
+          maxResults: maxRows,
+          orderBy: "startTime",
+        });
+        request.execute(function (resp) {
+          response = resp;
+          updateInfo();
         });
       });
     }
     //--------------------- end
   </script>
-  <script src='https://apis.google.com/js/client.js?onload=handleClientLoad'></script>
+  <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </html>
